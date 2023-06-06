@@ -1,0 +1,7 @@
+{
+  "log_setting": {
+    "level": "debug",
+    "output": "stdout",
+    "depth": 2
+  }
+}

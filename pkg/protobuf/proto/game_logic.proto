@@ -1,0 +1,29 @@
+syntax = "proto3";
+
+//import "google/protobuf/wrappers.proto";
+
+//import "google/protobuf/timestamp.proto";
+option go_package = "/proto_gen/game_logic/;proto_game_logic";
+
+service GameLogicService {
+  rpc GameInit(GameInitRequest) returns (GameInitResponse){}
+
+}
+
+message GameInitRequest {
+  string game_id = 1;
+}
+
+message GameInitResponse {
+  string game_id = 1;
+  string game_name = 2;
+  string game_desc = 3;
+  string game_icon = 4;
+  string game_version = 5;
+}
+
+
+
+
+
+
