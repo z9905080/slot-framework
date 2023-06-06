@@ -2,6 +2,7 @@ package usecase
 
 import (
 	"context"
+	"slot-framework/internal/gateway/domain/repository"
 	"slot-framework/pkg/logger"
 	protoGameLogic "slot-framework/pkg/protobuf/proto_gen/game_logic"
 )
@@ -9,10 +10,13 @@ import (
 type usecase struct {
 	log          logger.Logger
 	gameLogicSrv protoGameLogic.GameLogicService
+	gameManager  repository.InfGameManagerService
 }
 
 func (u *usecase) GameFlow(flow CmdOperation) (EventOperation, error) {
 	u.log.DebugF("GameFlow: %v", flow)
+
+	u.gameManager.NewGameModule(flow.Data)
 
 	resp, err := u.gameLogicSrv.GameInit(context.Background(), &protoGameLogic.GameInitRequest{
 		GameId: flow.Data,
@@ -33,9 +37,10 @@ func (u *usecase) GameFlow(flow CmdOperation) (EventOperation, error) {
 
 }
 
-func NewUsecase(logger logger.Logger, service protoGameLogic.GameLogicService) InfGateway {
+func NewUsecase(logger logger.Logger, service protoGameLogic.GameLogicService, gameManager repository.InfGameManagerService) InfGateway {
 	return &usecase{
 		log:          logger,
 		gameLogicSrv: service,
+		gameManager:  gameManager,
 	}
 }

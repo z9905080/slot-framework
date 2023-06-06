@@ -3,9 +3,11 @@ package cmd
 import (
 	"context"
 	"github.com/asim/go-micro/v3/registry"
+	"github.com/shopspring/decimal"
 	"log"
 	"net/http"
 	"slot-framework/environment"
+	slotGame "slot-framework/internal/gateway/domain/infra/slot_game"
 	"slot-framework/internal/gateway/implement"
 	"slot-framework/internal/gateway/interface/adapter"
 	"slot-framework/internal/gateway/usecase"
@@ -51,6 +53,8 @@ func gateFx() {
 			// new game logic client
 			implement.NewGameLogicService,
 
+			slotGame.NewGameManager,
+
 			// new http server
 			adapter.NewHTTPServer,
 		),
@@ -73,6 +77,9 @@ func gateFx() {
 func gateExec(lc fx.Lifecycle, f fx.Shutdowner, config environment.Config, reg registry.Registry, l logger.Logger, server http.Handler) error {
 	lc.Append(fx.Hook{
 		OnStart: func(context.Context) error {
+
+			decimal.DivisionPrecision = 20
+			decimal.MarshalJSONWithoutQuotes = true
 
 			l.InfoF("gateExec start")
 
