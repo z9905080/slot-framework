@@ -1,0 +1,18 @@
+syntax = "proto3";
+
+//import "google/protobuf/wrappers.proto";
+
+//import "google/protobuf/timestamp.proto";
+option go_package = "/proto_gen/player/;proto_game_player";
+
+service PlayerService {
+  rpc GetPlayerInfo(GetPlayerInfoRequest) returns (GetPlayerInfoResponse) {}
+}
+
+message GetPlayerInfoRequest {
+  string player_id = 1;
+}
+
+message  GetPlayerInfoResponse{
+  string player_id = 1;
+}

@@ -14,9 +14,9 @@ type usecase struct {
 }
 
 func (u *usecase) GameFlow(flow CmdOperation) (EventOperation, error) {
-	u.log.DebugF("GameFlow: %v", flow)
+	u.log.InfoF("GameFlow: %v", flow)
 
-	u.gameManager.NewGameModule(flow.Data)
+	//u.gameManager.NewGameModule(flow.Data)
 
 	resp, err := u.gameLogicSrv.GameInit(context.Background(), &protoGameLogic.GameInitRequest{
 		GameId: flow.Data,

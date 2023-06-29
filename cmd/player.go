@@ -7,20 +7,19 @@ import (
 	"go.uber.org/fx"
 	"log"
 	"slot-framework/environment"
-	"slot-framework/internal/game_logic/domain/service"
-	"slot-framework/internal/game_logic/implement"
-	"slot-framework/internal/game_logic/interface/adapter"
-	"slot-framework/internal/game_logic/interface/handler"
-	"slot-framework/internal/game_logic/usecase"
+	"slot-framework/internal/player/domain/service"
+	"slot-framework/internal/player/interface/adapter"
+	"slot-framework/internal/player/interface/handler"
+	"slot-framework/internal/player/usecase"
 	"slot-framework/pkg/logger"
 )
 
-// gameLogicCmd cmd
-var gameLogicCmd = func() *cobra.Command {
+// playerCmd cmd
+var playerCmd = func() *cobra.Command {
 	cmd := &cobra.Command{
-		Use: "game_logic",
+		Use: "player",
 		Run: func(cmd *cobra.Command, args []string) {
-			gameLogicFx()
+			playerFx()
 		},
 	}
 	cmd.Flags().StringVar((*string)(&environment.ConfigPath), "config", "./environment/dev/config.json", "config file")
@@ -28,7 +27,7 @@ var gameLogicCmd = func() *cobra.Command {
 	return cmd
 }
 
-func gameLogicFx() {
+func playerFx() {
 	// di
 	app := fx.New(
 		fx.NopLogger,
@@ -43,18 +42,14 @@ func gameLogicFx() {
 
 			adapter.NewMicroServer,
 
-			handler.NewGameLogicHandler,
+			handler.NewPlayerHandler,
 
-			usecase.NewGameLogicUsecase,
+			usecase.NewPlayerUsecase,
 
-			service.NewGameService,
-
-			implement.NewPlayerService,
+			service.NewPlayerService,
 
 			// new logger
 			logger.NewLogger,
-
-			//registry_provider.NewConsulRegistry,
 		),
 
 		func() fx.Option {
@@ -62,7 +57,7 @@ func gameLogicFx() {
 				return registry.DefaultRegistry
 			})
 		}(),
-		fx.Invoke(gameLogicExec),
+		fx.Invoke(playerExec),
 	)
 
 	if err := app.Err(); err != nil {
@@ -72,11 +67,11 @@ func gameLogicFx() {
 	app.Run()
 }
 
-func gameLogicExec(lc fx.Lifecycle, f fx.Shutdowner, l logger.Logger, grpcServer *adapter.GrpcServer, reg registry.Registry) error {
+func playerExec(lc fx.Lifecycle, f fx.Shutdowner, l logger.Logger, grpcServer *adapter.GrpcServer, reg registry.Registry) error {
 	lc.Append(fx.Hook{
 		OnStart: func(context.Context) error {
 
-			l.InfoF("gateExec start")
+			l.InfoF("playerExec start")
 
 			go func() {
 				if err := grpcServer.Run(); err != nil {

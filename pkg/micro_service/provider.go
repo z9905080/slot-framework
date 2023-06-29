@@ -16,6 +16,7 @@ func (n MicroServiceName) String() string {
 
 const (
 	GameLogic = MicroServiceName("game_logic")
+	Player    = MicroServiceName("player")
 )
 
 // NewService
@@ -27,7 +28,7 @@ func NewService(serviceName MicroServiceName, reg registry.Registry) micro.Servi
 	)
 
 	opts := []micro.Option{
-		micro.Name(serviceName.String()), // The service name to register in the registry
+		micro.Name(serviceName.String()), // The service name to register in the registry_provider
 		micro.Client(myClient),
 	}
 
@@ -35,8 +36,11 @@ func NewService(serviceName MicroServiceName, reg registry.Registry) micro.Servi
 		opts = append(opts, micro.Registry(reg))
 	}
 
-	service := micro.NewService(opts...)
+	//destOpts := make([]micro.Option, len(opts))
+	//copy(destOpts, opts)
+	//spew.Dump(destOpts)
 
-	service.Init()
+	service := micro.NewService(opts...)
+	//service.Init()
 	return service
 }

@@ -27,4 +27,5 @@ func init() {
 	// register command
 	rootCmd.AddCommand(gateCmd())
 	rootCmd.AddCommand(gameLogicCmd())
+	rootCmd.AddCommand(playerCmd())
 }
